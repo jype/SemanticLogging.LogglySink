@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="LogglySinkElement"
+    targetNamespace="urn:SemanticLogging.LogglySink"
+    xmlns="urn:SemanticLogging.LogglySink"
+    xmlns:etw="http://schemas.microsoft.com/practices/2013/entlib/semanticlogging/etw"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+  
+  <xs:element name="logglySink">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="instanceName" type="xs:string" use="required" />
+      <xs:attribute name="connectionString" type="xs:string" use="required" />
+      <xs:attribute name="customerToken" type="xs:string" use="required" />
+      <xs:attribute name="tag" type="xs:string" use="optional" />
+      <xs:attribute name="bufferingIntervalInSeconds" type="xs:int" use="optional" />
+      <xs:attribute name="bufferingCount" type="xs:int" use="optional" />
+      <xs:attribute name="maxBufferSize" type="xs:int" use="optional" />
+      <xs:attribute name="bufferingFlushAllTimeoutInSeconds" type="xs:int" use="optional" />
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

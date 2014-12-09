@@ -19,7 +19,7 @@ namespace SemanticLoggingTest
               LogEventSource.Keywords.Perf | LogEventSource.Keywords.Diagnostic);
 
             // When setting up the the listener we can override the default values for buffering. Default values are recommended unless you are testing or have specific needs.
-            var sinkSubscription = listener1.LogToLoggly("TestInstance", "https://logs-01.loggly.com", "3572a3bf-c842-4ef5-9a0e-9f28a5c039e8", "LogglyTest",
+            var sinkSubscription = listener1.LogToLoggly("TestInstance", "https://logs-01.loggly.com", "[Custom token]", "LogglyTest",
                 TimeSpan.FromMinutes(1), null, 5, 1000);
 
 

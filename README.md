@@ -5,7 +5,7 @@ Sink extension to the Enterprise Library Semantic Logging Application Block. Add
 Documentation
 =============
 See examples:
-* [Example using the loggly sink in-process.](https://github.com/jype/SemanticLogging.LogglySink/blob/master/SemanticLoggingExample.cs)
+* [Example of using the loggly sink in-process.](https://github.com/jype/SemanticLogging.LogglySink/blob/master/SemanticLoggingExample.cs)
 * [Out-of-process configuration.](https://github.com/jype/SemanticLogging.LogglySink/blob/master/SemanticLogging.LogglySink/SemanticLogging.LogglySink/SemanticLogging-svc.Out-of-process-Example.xml)
 * [XML schema for the above configuration.](https://github.com/jype/SemanticLogging.LogglySink/blob/master/SemanticLogging.LogglySink/SemanticLogging.LogglySink/SemanticLogging.LogglySink.xsd)
 

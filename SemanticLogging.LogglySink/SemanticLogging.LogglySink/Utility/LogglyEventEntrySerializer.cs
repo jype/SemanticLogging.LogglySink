@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -16,13 +14,17 @@ namespace SemanticLogging.LogglySink.Utility
     /// </summary>
     internal class LogglyEventEntrySerializer : IDisposable
     {
+        private const string PayloadFlattenFormatString = "Payload_{0}";
+
         public readonly string instanceName;
+        public readonly bool flattenPayload;
 
         private JsonWriter writer;
 
-        internal LogglyEventEntrySerializer(string instanceName)
+        internal LogglyEventEntrySerializer(string instanceName, bool flattenPayload)
         {
             this.instanceName = instanceName;
+            this.flattenPayload = flattenPayload;
         }
 
         internal string Serialize(IEnumerable<EventEntry> entries)
@@ -63,6 +65,28 @@ namespace SemanticLogging.LogglySink.Utility
             WriteValue("Version", entry.Schema.Version);
             WriteValue("ProcessId", entry.ProcessId);
             WriteValue("ThreadId", entry.ThreadId);
+
+            //If we are not going to flatten the payload then write opening
+            if (!flattenPayload)
+            {
+                writer.WritePropertyName("Payload");
+                writer.WriteStartObject();
+            }
+
+            foreach (var payload in entry.Schema.Payload.Zip(entry.Payload, Tuple.Create))
+            {
+                this.WriteValue(
+                    this.flattenPayload
+                        ? string.Format(CultureInfo.InvariantCulture, PayloadFlattenFormatString, payload.Item1)
+                        : payload.Item1,
+                    payload.Item2);
+            }
+
+            //If we are not going to flatten the payload then write closing
+            if (!flattenPayload)
+            {
+                writer.WriteEndObject();
+            }
 
             this.writer.WriteEndObject();
             this.writer.WriteWhitespace("\n");

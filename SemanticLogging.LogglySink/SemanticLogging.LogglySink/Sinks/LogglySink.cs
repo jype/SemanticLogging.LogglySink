@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+﻿using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
 using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
 using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Utility;
 using Newtonsoft.Json.Linq;
@@ -30,6 +28,7 @@ namespace SemanticLogging.LogglySink
         private readonly string customerToken;
         private readonly string instanceName;
         private readonly string tag;
+        private readonly bool flattenPayload;
 
         private readonly Uri logglyUrl;
         private readonly TimeSpan onCompletedTimeout;
@@ -41,6 +40,7 @@ namespace SemanticLogging.LogglySink
         /// <param name="connectionString">The connection string for the storage account.</param>
         /// <param name="customerToken">The loggly customerToken that must be part of the Url.</param>
         /// <param name="tag">The tag used in loggly updates. Default is to use the instanceName.</param>
+        /// <param name="flattenPayload">Flatten the payload if you want the parameters serialized.</param>
         /// <param name="bufferInterval">The buffering interval to wait for events to accumulate before sending them to Loggly.</param>
         /// <param name="bufferingCount">The buffering event entry count to wait before sending events to Loggly </param>
         /// <param name="maxBufferSize">The maximum number of entries that can be buffered while it's sending to Windows Azure Storage before the sink starts dropping entries.</param>
@@ -48,7 +48,7 @@ namespace SemanticLogging.LogglySink
         /// This means that if the timeout period elapses, some event entries will be dropped and not sent to the store. Normally, calling <see cref="IDisposable.Dispose"/> on 
         /// the <see cref="System.Diagnostics.Tracing.EventListener"/> will block until all the entries are flushed or the interval elapses.
         /// If <see langword="null"/> is specified, then the call will block indefinitely until the flush operation finishes.</param>
-        public LogglySink(string instanceName, string connectionString, string customerToken, string tag, TimeSpan bufferInterval,
+        public LogglySink(string instanceName, string connectionString, string customerToken, string tag, bool flattenPayload, TimeSpan bufferInterval,
             int bufferingCount, int maxBufferSize, TimeSpan onCompletedTimeout)
         {
             Guard.ArgumentNotNullOrEmpty(instanceName, "instanceName");
@@ -63,6 +63,7 @@ namespace SemanticLogging.LogglySink
             this.logglyUrl = new Uri(new Uri(connectionString), string.Format(BulkServiceOperationPath, customerToken, tag));
             this.customerToken = customerToken;
             this.tag = string.IsNullOrWhiteSpace(tag) ? instanceName : tag;
+            this.flattenPayload = flattenPayload;
             var sinkId = string.Format(CultureInfo.InvariantCulture, "LogglySink ({0})", instanceName);
             bufferedPublisher = BufferedEventPublisher<EventEntry>.CreateAndStart(sinkId, PublishEventsAsync, bufferInterval,
                 bufferingCount, maxBufferSize, cancellationTokenSource.Token);
@@ -151,7 +152,7 @@ namespace SemanticLogging.LogglySink
                 client = new HttpClient();
 
                 string logMessages;
-                using (var serializer = new LogglyEventEntrySerializer(this.instanceName))
+                using (var serializer = new LogglyEventEntrySerializer(this.instanceName, this.flattenPayload))
                 {
                     logMessages = serializer.Serialize(collection);
                 }

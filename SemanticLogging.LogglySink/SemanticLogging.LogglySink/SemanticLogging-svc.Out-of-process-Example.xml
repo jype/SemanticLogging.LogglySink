@@ -17,6 +17,7 @@
       connectionString="https://logs-01.loggly.com"
       customerToken="[loggly customer token]"
       tag="new"
+      flattenPayload="false"
     >
       <etw:sources>
         <etw:eventSource name="[Your event source name]" level="Informational" />

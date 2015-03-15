@@ -32,6 +32,7 @@ namespace SemanticLogging.LogglySink
                 (string)element.Attribute("connectionString"),
                 (string)element.Attribute("customerToken"),
                 (string)element.Attribute("tag"),
+                (bool?)element.Attribute("flattenPayload") ?? false,
                 element.Attribute("bufferingIntervalInSeconds").ToTimeSpan() ?? Buffering.DefaultBufferingInterval,
                 (int?)element.Attribute("bufferingCount") ?? Buffering.DefaultBufferingCount,
                 (int?)element.Attribute("maxBufferSize") ?? Buffering.DefaultMaxBufferSize,

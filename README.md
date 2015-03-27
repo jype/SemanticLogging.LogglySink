@@ -1,6 +1,7 @@
 SemanticLogging Loggly Sink
 ===========================
 Sink extension to the Enterprise Library Semantic Logging Application Block. Adding support for the log data management tool Loggly, www.loggly.com.
+Also available as a [nuget package](https://www.nuget.org/packages/SemanticLogging.LogglySink/)
 
 Documentation
 =============

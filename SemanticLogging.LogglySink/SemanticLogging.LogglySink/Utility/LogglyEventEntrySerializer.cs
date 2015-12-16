@@ -53,6 +53,7 @@ namespace SemanticLogging.LogglySink.Utility
         {
             this.writer.WriteStartObject();
             WriteValue("EventId", entry.EventId);
+            WriteValue("EventName", entry.Schema.EventName);
             WriteValue("Timestamp", ToJsonIso8601(entry.Timestamp.UtcDateTime));
             WriteValue("Keywords", (long)entry.Schema.Keywords);
             WriteValue("ProviderId", entry.Schema.ProviderId);
@@ -65,6 +66,8 @@ namespace SemanticLogging.LogglySink.Utility
             WriteValue("Version", entry.Schema.Version);
             WriteValue("ProcessId", entry.ProcessId);
             WriteValue("ThreadId", entry.ThreadId);
+            WriteValue("ActivityId", entry.ActivityId);
+            WriteValue("RelatedActivityId", entry.RelatedActivityId);
 
             //If we are not going to flatten the payload then write opening
             if (!flattenPayload)
